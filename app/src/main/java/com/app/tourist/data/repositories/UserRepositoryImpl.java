@@ -22,9 +22,10 @@ public class UserRepositoryImpl implements UserRepositories {
     }
 
     @Override
-    public List<User> getAllUser() throws  Exception{
+    public List<User> getAllUser() {
        try{
            Result<ApiResponse> response = this.apiUserSource.getAllUser();
+
            return null;
        }catch (Exception Exception){
            throw Exception;
