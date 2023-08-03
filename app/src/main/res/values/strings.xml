@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Tourist</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -6,6 +6,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ProfileTitle">Profile</string>
+    <string name="login_failed" tools:ignore="ExtraTranslation">MapsActivity</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
