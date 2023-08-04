@@ -42,12 +42,12 @@
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.app.tourist.ui.view.login.LoginFragment"
-        android:label="Login"
+        android:label="Connexion"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/navigation_signup"
         android:name="com.app.tourist.ui.view.signup.SignupFragment"
-        android:label="fragment_signup"
+        android:label="Inscrption"
         tools:layout="@layout/fragment_signup" />
 
 

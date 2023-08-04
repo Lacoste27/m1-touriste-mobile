@@ -10,6 +10,10 @@ public class TokenDataSource {
         this.sharedPreferences = sharedPreferences;
     }
 
+    public TokenDataSource() {
+        this.sharedPreferences=null;
+    }
+
     public void saveToken(String token) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(TOKEN_KEY, token);

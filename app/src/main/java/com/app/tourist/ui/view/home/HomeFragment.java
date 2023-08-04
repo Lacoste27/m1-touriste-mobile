@@ -39,11 +39,11 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         this.view = views;
-        setRecyclerView();
         return root;
     }
 
-    public void OnViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState){
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         ArrayList<ItemsModel> itemsArrayList = new ArrayList<>();
@@ -52,16 +52,17 @@ public class HomeFragment extends Fragment {
         itemsArrayList.add(new ItemsModel("House with a great view", "San Francisco, CA 94110"," This is 2 bed /1 bath home boasts an enormous, \n", 2,1,840353, "pic1", true));
         itemsArrayList.add(new ItemsModel("House with a great view", "San Francisco, CA 94110"," This is 2 bed /1 bath home boasts an enormous, \n", 2,1,840353, "pic1", true));
 
-        recyclerViewPopular = (RecyclerView) this.view.findViewById(R.id.viewPopular);
-        recyclerViewNew = (RecyclerView) this.view.findViewById(R.id.viewNews);
+        recyclerViewPopular = (RecyclerView) view.findViewById(R.id.viewPopular);
+        recyclerViewNew = (RecyclerView) view.findViewById(R.id.viewNews);
 
-        recyclerViewPopular.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewNew.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewPopular.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewNew.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
         adapterNew = new ItemsAdapter(itemsArrayList);
         adapterPopular = new ItemsAdapter(itemsArrayList);
 
         recyclerViewPopular.setAdapter(adapterPopular);
+        recyclerViewNew.setAdapter(adapterNew);
     }
 
     public void setRecyclerView(){
@@ -81,7 +82,7 @@ public class HomeFragment extends Fragment {
         adapterPopular = new ItemsAdapter(itemsArrayList);
 
         recyclerViewPopular.setAdapter(adapterPopular);
-        // recyclerViewNew.setAdapter(adapterNew);
+        recyclerViewNew.setAdapter(adapterNew);
     }
 
     @Override

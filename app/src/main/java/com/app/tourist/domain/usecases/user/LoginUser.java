@@ -18,8 +18,12 @@ public class LoginUser {
     public Result<UserModel> login(String username, String password){
         try {
             UserModel loginresponse = (UserModel)this.repository.login(username, password);
-            Result<UserModel> result = new Result.Success<UserModel>(loginresponse);
-            return result;
+            if(loginresponse != null){
+                Result<UserModel> result = new Result.Success<UserModel>(loginresponse);
+                return result;
+            } else{
+                return null;
+            }
         }catch (Exception exception) {
             return new Result.Error(exception);
         }
