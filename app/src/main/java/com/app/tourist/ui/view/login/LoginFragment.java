@@ -79,18 +79,22 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 SharedPreferences preferences = getActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE);
-                viewModel.clearToken(preferences);
+
+                String email = emailLoginTxt.getText().toString() ;
+                String password = passwordLoginTxt.getText().toString();
+
+                viewModel.login(email, password);
+
+                viewModel.setToken(preferences, "token");
                 controller.navigate(R.id.navigation_home);
             }
         });
     }
-
     @Override
     public void onResume(){
         super.onResume();
         Log.d("Resume tag", "onResume: ");
     }
-
     private void initView(){
         this.emailLoginTxt = (TextView) this.view.findViewById(R.id.emailLoginTxt);
         this.passwordLoginTxt = (TextView) this.view.findViewById(R.id.passwordLoginTxt);
