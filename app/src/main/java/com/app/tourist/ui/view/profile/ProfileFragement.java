@@ -14,9 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.app.tourist.R;
 import com.app.tourist.core.constant.NetworkPath;
 import com.app.tourist.core.constant.UserPath;
 import com.app.tourist.databinding.FragmentProfileBinding;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 
@@ -28,8 +36,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ProfileFragement extends Fragment {
-
+public class ProfileFragement extends Fragment  {
     private static final String CHANNEL_ID ="sqldlqs" ;
     private ProfileViewModel mViewModel;
     private FragmentProfileBinding binding;
@@ -47,43 +54,6 @@ public class ProfileFragement extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textProfile;
-        profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-        try {
-            String url = NetworkPath.host+ UserPath.login;
-
-            OkHttpClient client = new OkHttpClient();
-
-            RequestBody formBody = new FormBody.Builder()
-                    .add("email", "robsona@mail.com")
-                    .add("password", "passs")
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(formBody)
-                    .build();
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    // Handle failure here
-                    Log.e("OkHttp Error", e.toString());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    // Handle the response here
-                    String responseBody = response.body().toString();
-                    Log.d("c Response", responseBody);
-                }
-            });
-
-        }catch (Exception exception){
-            Log.d("apiexception", "onCreateViewException:"+exception.getMessage());
-        }
-
         return root;
     }
 
@@ -92,12 +62,4 @@ public class ProfileFragement extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface UserRepositories {
     List<User> getAllUser();
+    User login(String username, String password);
 }

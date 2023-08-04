@@ -6,7 +6,6 @@ public class Result<T> {
     // hide the private constructor to limit subclass types (Success, Error)
     private Result() {
     }
-
     @Override
     public String toString() {
         if (this instanceof Result.Success) {
@@ -22,7 +21,6 @@ public class Result<T> {
     // Success sub-class
     public final static class Success<T> extends Result {
         private T data;
-
         public Success(T data) {
             this.data = data;
         }
@@ -35,7 +33,6 @@ public class Result<T> {
     // Error sub-class
     public final static class Error extends Result {
         private Exception error;
-
         public Error(Exception error) {
             this.error = error;
         }
