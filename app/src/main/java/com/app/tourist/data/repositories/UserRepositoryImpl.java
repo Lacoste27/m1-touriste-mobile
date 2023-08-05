@@ -1,5 +1,8 @@
 package com.app.tourist.data.repositories;
 
+import com.app.tourist.core.error.BadRequestException;
+import com.app.tourist.core.service.network.NetworkGetCall;
+import com.app.tourist.core.service.network.NetworkPostCall;
 import com.app.tourist.core.utils.ApiResponse;
 import com.app.tourist.core.utils.Result;
 
@@ -9,6 +12,7 @@ import com.app.tourist.data.sources.api.users.ApiUserSourceImpl;
 import com.app.tourist.domain.entities.User;
 import com.app.tourist.domain.repositories.UserRepositories;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,10 +20,19 @@ import javax.inject.Inject;
 
 public class UserRepositoryImpl implements UserRepositories {
 
+    private static volatile UserRepositoryImpl instance;
     private ApiUserSourceImpl apiUserSource;
+
 
     public UserRepositoryImpl(ApiUserSourceImpl apiUserSource){
         this.apiUserSource = apiUserSource;
+    }
+
+    public static UserRepositoryImpl getInstance(ApiUserSourceImpl dataSource) {
+        if (instance == null) {
+            instance = new UserRepositoryImpl(dataSource);
+        }
+        return instance;
     }
 
     public ApiUserSourceImpl getApiUserSource() {
@@ -38,7 +51,7 @@ public class UserRepositoryImpl implements UserRepositories {
     }
 
     @Override
-    public User login(String username, String password) {
+    public User login(String username, String password) throws Exception {
         try{
             Result<ApiResponse> response = this.apiUserSource.login(username, password);
 
@@ -55,7 +68,7 @@ public class UserRepositoryImpl implements UserRepositories {
                 return result;
 
             } else {
-                return null;
+                throw ((Result.Error) response).getError();
             }
         }catch (Exception Exception){
             throw Exception;

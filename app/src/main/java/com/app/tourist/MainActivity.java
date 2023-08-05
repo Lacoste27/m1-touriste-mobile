@@ -1,5 +1,8 @@
 package com.app.tourist;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -41,6 +44,29 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        if (isConnectedToInternet()) {
+            Toast.makeText(this, R.string.connecter, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.nonConnecter, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private boolean isConnectedToInternet() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+            NetworkCapabilities networkCapabilities =
+                    connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+
+            return networkCapabilities != null &&
+                    (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
+        }
+
+        return false;
     }
 
     private boolean onBottomNavigationItemSelected(MenuItem item) {

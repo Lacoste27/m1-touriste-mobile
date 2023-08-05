@@ -35,7 +35,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/emailTextLogin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -57,10 +57,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+            app:layout_constraintTop_toBottomOf="@+id/emailTextLogin" />
 
         <EditText
-            android:id="@+id/editTextTextPassword"
+            android:id="@+id/passwordTextLogin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -81,7 +81,7 @@
             android:layout_marginEnd="40dp"
             android:text="Connexion"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordTextLogin" />
 
         <Button
             android:id="@+id/signupBoutton"
@@ -91,7 +91,7 @@
             android:text="S'inscrire"
             app:layout_constraintEnd_toStartOf="@+id/loginBoutton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordTextLogin" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

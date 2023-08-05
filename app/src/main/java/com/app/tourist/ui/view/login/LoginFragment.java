@@ -1,12 +1,15 @@
 package com.app.tourist.ui.view.login;
 
+import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextWatcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,15 +17,21 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.text.Editable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.tourist.R;
+import com.app.tourist.databinding.FragmentFavoriteBinding;
+import com.app.tourist.databinding.FragmentLoginBinding;
 import com.app.tourist.ui.view.profile.ProfileViewModel;
 import com.app.tourist.ui.view.signup.SignupFragment;
 import com.google.android.material.snackbar.Snackbar;
@@ -34,11 +43,13 @@ public class LoginFragment extends Fragment {
     public LoginViewModel viewModel;
 
     public View view;
+    public FragmentLoginBinding binding;
 
     private TextView emailLoginTxt;
     private TextView passwordLoginTxt;
     private Button loginBoutton;
     private Button signupBoutton;
+    private ProgressBar loadingProgressBar;
     private NavController controller;
 
     public static LoginFragment newInstance() {
@@ -48,11 +59,12 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        this.viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
+
         this.view = inflater.inflate(R.layout.fragment_login, container, false);
+        this.viewModel = new ViewModelProvider(this, new LoginViewModelFactory())
+                .get(LoginViewModel.class);
 
-
-        initView();
 
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
@@ -60,13 +72,12 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         this.controller = Navigation.findNavController(view);
 
-        this.passwordLoginTxt = view.findViewById(R.id.passwordLoginTxt);
-        this.emailLoginTxt = view.findViewById(R.id.emailLoginTxt);
-        this.signupBoutton = view.findViewById(R.id.signupBoutton);
+        this.emailLoginTxt = view.findViewById(R.id.emailTextLogin);
+        this.passwordLoginTxt = view.findViewById(R.id.passwordTextLogin);
         this.loginBoutton = view.findViewById(R.id.loginBoutton);
+        this.signupBoutton = view.findViewById(R.id.signupBoutton);
 
         this.signupBoutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,30 +86,79 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        loginBoutton.setOnClickListener(new View.OnClickListener() {
+        viewModel.getLoginFormState().observe(this, new Observer<LoginState>() {
             @Override
-            public void onClick(View view) {
-                SharedPreferences preferences = getActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE);
-
-                String email = emailLoginTxt.getText().toString() ;
-                String password = passwordLoginTxt.getText().toString();
-
-                viewModel.login(email, password);
-
-                viewModel.setToken(preferences, "token");
-                controller.navigate(R.id.navigation_home);
+            public void onChanged(@Nullable LoginState loginFormState) {
+                if (loginFormState == null) {
+                    return;
+                }
+                loginBoutton.setEnabled(loginFormState.isDataValid());
+                if (loginFormState.getUsernameError() != null) {
+                    emailLoginTxt.setError(getString(loginFormState.getUsernameError()));
+                }
+                if (loginFormState.getPasswordError() != null) {
+                    emailLoginTxt.setError(getString(loginFormState.getPasswordError()));
+                }
             }
         });
+
+
+        viewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+            @Override
+            public void onChanged(@Nullable LoginResult loginResult) {
+                if (loginResult == null) {
+                    return;
+                }
+
+                if (loginResult.getError() != null || loginResult.getErrorMessage() != null) {
+                    showLoginFailed(loginResult.getErrorMessage());
+                }
+                if (loginResult.getSuccess() != null) {
+                    updateUiWithUser(loginResult.getSuccess());
+                }
+
+                //setResult(Activity.RESULT_OK);
+                //Complete and destroy login activity once successful
+                //finish();
+            }
+        });
+
+        passwordLoginTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    viewModel.login(emailLoginTxt.getText().toString(),
+                            passwordLoginTxt.getText().toString());
+                }
+                return false;
+            }
+        });
+
+        loginBoutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.login(emailLoginTxt.getText().toString(),
+                        passwordLoginTxt.getText().toString());
+            }
+        });
+
     }
     @Override
     public void onResume(){
         super.onResume();
         Log.d("Resume tag", "onResume: ");
     }
-    private void initView(){
-        this.emailLoginTxt = (TextView) this.view.findViewById(R.id.emailLoginTxt);
-        this.passwordLoginTxt = (TextView) this.view.findViewById(R.id.passwordLoginTxt);
-        this.loginBoutton = (Button) this.view.findViewById(R.id.loginBoutton);
-        this.signupBoutton = (Button) this.view.findViewById(R.id.signupBoutton);
+
+    private void updateUiWithUser(LoggedInUserView model) {
+        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        Snackbar.make(getView(), welcome, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showLoginFailed(@StringRes Integer errorString) {
+        Snackbar.make(getView(), errorString, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showLoginFailed(String errorString) {
+        Snackbar.make(getView(), errorString, Snackbar.LENGTH_LONG).show();
     }
 }

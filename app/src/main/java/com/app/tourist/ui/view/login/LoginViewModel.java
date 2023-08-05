@@ -1,6 +1,7 @@
 package com.app.tourist.ui.view.login;
 
 import android.content.SharedPreferences;
+import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -29,6 +30,10 @@ public class LoginViewModel extends ViewModel {
         this.loginUseCase = new LoginUser(repositories);
     }
 
+    public LoginViewModel(UserRepositoryImpl repository){
+        this.loginUseCase = new LoginUser(repository);
+    }
+
     LiveData<LoginState> getLoginFormState() {
         return loginFormState;
     }
@@ -38,13 +43,19 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(String username, String password) {
-        Result<UserModel> result = this.loginUseCase.login(username, password);
-
-        if (result instanceof Result.Success) {
-            LoggedInUserView data = ((Result.Success<LoggedInUserView>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
+        try{
+            Result<UserModel> result = this.loginUseCase.login(username, password);
+            if (result instanceof Result.Success) {
+                UserModel user = (UserModel) ((Result.Success<UserModel>) result).getData();
+                LoggedInUserView data = new LoggedInUserView(user.getNom());
+                loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+            } else {
+                String message = ((Result.Error) result).getError().getLocalizedMessage().split(":")[1];
+                loginResult.setValue(new LoginResult(message));
+            }
+        }catch (Exception exception){
+            String message = exception.getLocalizedMessage().split(":")[1];
+            loginResult.setValue(new LoginResult(message));
         }
     }
 
@@ -64,5 +75,30 @@ public class LoginViewModel extends ViewModel {
         TokenDataSource tokenDataSource = new TokenDataSource(preferences);
         this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
         this.tokenRepository.clearToken();
+    }
+    public void loginDataChanged(String username, String password) {
+        if (!isUserNameValid(username)) {
+            loginFormState.setValue(new LoginState(R.string.invalid_username, null));
+        } else if (!isPasswordValid(password)) {
+            loginFormState.setValue(new LoginState(null, R.string.invalid_password));
+        } else {
+            loginFormState.setValue(new LoginState(true));
+        }
+    }
+
+    private boolean isUserNameValid(String username) {
+        if (username == null) {
+            return false;
+        }
+        if (username.contains("@")) {
+            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
+        } else {
+            return !username.trim().isEmpty();
+        }
+    }
+
+    // A placeholder password validation check
+    private boolean isPasswordValid(String password) {
+        return password != null && password.trim().length() > 5;
     }
 }
