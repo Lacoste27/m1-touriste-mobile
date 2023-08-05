@@ -41,10 +41,8 @@ import org.w3c.dom.Text;
 public class LoginFragment extends Fragment {
 
     public LoginViewModel viewModel;
-
     public View view;
     public FragmentLoginBinding binding;
-
     private TextView emailLoginTxt;
     private TextView passwordLoginTxt;
     private Button loginBoutton;
@@ -72,7 +70,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.controller = Navigation.findNavController(view);
+        this.controller = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment_activity_main);
 
         this.emailLoginTxt = view.findViewById(R.id.emailTextLogin);
         this.passwordLoginTxt = view.findViewById(R.id.passwordTextLogin);
@@ -82,7 +80,7 @@ public class LoginFragment extends Fragment {
         this.signupBoutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                controller.navigate(R.id.navigation_signup);
+                Toast.makeText(getContext(), "Signup click",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -117,9 +115,6 @@ public class LoginFragment extends Fragment {
                     updateUiWithUser(loginResult.getSuccess());
                 }
 
-                //setResult(Activity.RESULT_OK);
-                //Complete and destroy login activity once successful
-                //finish();
             }
         });
 

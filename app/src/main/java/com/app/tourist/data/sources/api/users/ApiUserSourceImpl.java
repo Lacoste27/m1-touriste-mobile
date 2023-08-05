@@ -17,6 +17,7 @@ import com.app.tourist.data.service.UserService;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -88,8 +89,11 @@ public class ApiUserSourceImpl implements ApiUserSource{
 
                 return new Result.Success<>(result);
 
-            } catch (ExecutionException e) {
+            }  catch (UnknownHostException e){
                 return new Result.Error(e);
+            }catch (ExecutionException e) {
+                Throwable throwable = e.getCause();
+                return new Result.Error(new Exception(e.getCause()));
             } catch (InterruptedException e) {
                 return new Result.Error(e);
             } catch (BadRequestException e){

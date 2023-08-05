@@ -1,15 +1,28 @@
 package com.app.tourist;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.app.tourist.R;
+import com.app.tourist.data.repositories.TokenRepositoryImpl;
+import com.app.tourist.data.sources.local.TokenDataSource;
+import com.app.tourist.domain.repositories.TokenRepository;
+import com.app.tourist.ui.view.favorite.FavoriteFragment;
+import com.app.tourist.ui.view.home.HomeFragment;
 import com.app.tourist.ui.view.login.LoginFragment;
+import com.app.tourist.ui.view.map.MapFragment;
 import com.app.tourist.ui.view.profile.ProfileFragement;
+import com.app.tourist.ui.view.setting.SettingsFragment;
+import com.app.tourist.ui.view.signup.SignupFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -21,29 +34,85 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.app.tourist.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final long SPLASH_SCREEN_DELAY = 3000; // 2 secondes
 
     private ActivityMainBinding binding;
+    private TokenRepositoryImpl repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE);
+        this.repository = TokenRepositoryImpl.getInstance(new TokenDataSource(sharedPreferences));
+        this.repository.clearToken();
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().getDecorView().getWindowInsetsController().hide(
+                android.view.WindowInsets.Type.statusBars()
+        );
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        navView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_login, R.id.navigation_signup, R.id.navigation_map, R.id.navigation_favoris, R.id.navigation_setting)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+                if(id == R.id.navigation_home){
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, new HomeFragment())
+                            .commit();
+                    return true;
+
+                } else if(id == R.id.navigation_profile) {
+                    if(isLoggedIn()){
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.container, new ProfileFragement())
+                                .commit();
+                        return true;
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Veuillez vous connectez pour voir votre profile", Toast.LENGTH_SHORT).show();
+
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.container, new SignupFragment())
+                                .commit();
+                        return true;
+                    }
+
+                } else if (id == R.id.navigation_map) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, new MapFragment())
+                            .commit();
+                    return true;
+
+                } else if (id == R.id.navigation_favoris) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, new FavoriteFragment())
+                            .commit();
+                    return true;
+
+                } else if (id == R.id.navigation_setting){
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, new SettingsFragment())
+                            .commit();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         if (isConnectedToInternet()) {
             Toast.makeText(this, R.string.connecter, Toast.LENGTH_SHORT).show();
@@ -53,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private boolean isLoggedIn() {
+        return true;
+    }
     private boolean isConnectedToInternet() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -69,20 +141,4 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private boolean onBottomNavigationItemSelected(MenuItem item) {
-        boolean isConnecter = true;
-
-        if(item.getItemId() == R.id.navigation_profile){
-            Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return false;
-    }
-
-    private void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, fragment)
-                .commit();
-    }
 }

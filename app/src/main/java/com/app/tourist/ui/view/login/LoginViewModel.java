@@ -17,6 +17,8 @@ import com.app.tourist.domain.repositories.UserRepositories;
 import com.app.tourist.domain.usecases.user.LoginUser;
 import com.app.tourist.R;
 
+import java.net.UnknownHostException;
+
 public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
@@ -50,8 +52,15 @@ public class LoginViewModel extends ViewModel {
                 LoggedInUserView data = new LoggedInUserView(user.getNom());
                 loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
             } else {
-                String message = ((Result.Error) result).getError().getLocalizedMessage().split(":")[1];
-                loginResult.setValue(new LoginResult(message));
+                Exception exception=  ((Result.Error) result).getError();
+
+                if(exception instanceof UnknownHostException){
+                    loginResult.setValue(new LoginResult("Verifier que vous êtes connecter à internet"));
+                } else {
+                    String message = exception.getLocalizedMessage().split(":")[1];
+                    loginResult.setValue(new LoginResult(message));
+                }
+
             }
         }catch (Exception exception){
             String message = exception.getLocalizedMessage().split(":")[1];

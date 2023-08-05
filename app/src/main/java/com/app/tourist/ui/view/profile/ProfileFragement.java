@@ -1,23 +1,28 @@
 package com.app.tourist.ui.view.profile;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.tourist.R;
 import com.app.tourist.core.constant.NetworkPath;
 import com.app.tourist.core.constant.UserPath;
 import com.app.tourist.databinding.FragmentProfileBinding;
+import com.app.tourist.ui.view.login.LoginFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -40,6 +45,7 @@ public class ProfileFragement extends Fragment  {
     private static final String CHANNEL_ID ="sqldlqs" ;
     private ProfileViewModel mViewModel;
     private FragmentProfileBinding binding;
+    private NavController controller;
 
     public static ProfileFragement newInstance() {
         return new ProfileFragement();
@@ -57,9 +63,14 @@ public class ProfileFragement extends Fragment  {
         return root;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private boolean isLoggedIn() {
+        return false;
     }
 }

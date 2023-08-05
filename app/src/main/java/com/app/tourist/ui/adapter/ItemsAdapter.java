@@ -41,7 +41,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.titleTxt.setText(items.get(position).getTitle());
         holder.adressTxt.setText(items.get(position).getAdresse());
-        holder.priceTxt.setText("$"+ formatter.format(items.get(position).getPrice()));
 
         int drawableResourceId = holder.itemView.getResources().getIdentifier((items.get(position).getPic()), "drawable", holder.itemView.getContext().getOpPackageName());
 
@@ -65,7 +64,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView titleTxt, adressTxt, priceTxt;
+        public TextView titleTxt, adressTxt;
         public ImageView pic;
 
         public ViewHolder(@NonNull View itemView) {
@@ -73,7 +72,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             titleTxt = itemView.findViewById(R.id.titleTxt);
             adressTxt = itemView.findViewById(R.id.adress);
-            priceTxt = itemView.findViewById(R.id.priceTxt);
             pic = itemView.findViewById(R.id.pic);
         }
     }
