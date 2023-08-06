@@ -1,22 +1,13 @@
 package com.app.tourist.data.models;
 
-public class Avis {
-    Integer note;
-    String commentaire;
+public class Avis extends com.app.tourist.domain.entities.Avis {
 
-    public Integer getNote() {
-        return note;
+
+    public Avis() {
+        super();
     }
 
-    public void setNote(Integer note) {
-        this.note = note;
-    }
-
-    public String getCommentaire() {
-        return commentaire;
-    }
-
-    public void setCommentaire(String commentaire) {
-        this.commentaire = commentaire;
+    public Avis(String note, String commentaire, String username){
+        super(note, commentaire, username);
     }
 }

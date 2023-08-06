@@ -70,7 +70,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.controller = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment_activity_main);
+        //this.controller = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment_activity_main); // to debug
 
         this.emailLoginTxt = view.findViewById(R.id.emailTextLogin);
         this.passwordLoginTxt = view.findViewById(R.id.passwordTextLogin);

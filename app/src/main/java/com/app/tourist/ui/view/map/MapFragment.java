@@ -12,17 +12,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.app.tourist.R;
 import com.app.tourist.data.models.SitesModel;
 import com.app.tourist.data.service.SiteService;
+import com.app.tourist.ui.adapter.InfoWindowAdapter;
 import com.app.tourist.ui.adapter.SitesAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -37,9 +41,12 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener{
     OkHttpClient client;
+
+
     String getUrl = "https://m1-tourist-test.onrender.com/api/sites";
     private MapViewModel mViewModel;
     private GoogleMap map;
@@ -61,18 +68,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         siteService = new SiteService();
         client = new OkHttpClient.Builder().callTimeout(30, TimeUnit.SECONDS).build();
-        mapView = view.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.mapView);
+        mapFragment.getMapAsync(this);
 
         return view;
     }
 
+
+
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        map = googleMap;
         Request request = new Request.Builder().url(getUrl).build();
 
+        //googleMap.setInfoWindowAdapter(new InfoWindowAdapter(getLayoutInflater()));
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -81,41 +92,65 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("API SUCCESSS", response.body().string());
+                try (ResponseBody responseBody = response.peekBody(Long.MAX_VALUE)) {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try{
-                            String responseData = response.body().string();
-                            JSONObject json = new JSONObject(responseData);
-                            JSONArray array = new JSONArray(json.get("data").toString());
-
-                            ArrayList<SitesModel> sites = new ArrayList<>();
-
-                            for(int i=0; i < array.length() ; i++){
-                                SitesModel site = siteService.jsonToSitesModel(array.getJSONObject(i));
-                                sites.add(siteService.jsonToSitesModel(array.getJSONObject(i)));
-
-                                LatLng sydney = new LatLng(site.getCoordonne().getLatitude(), site.getCoordonne().getLongitude());
-                                map.addMarker(new MarkerOptions().position(sydney).title(site.getNom()));
-                            }
-
-                            LatLng camera = new LatLng(sites.get(0).getCoordonne().getLatitude(), sites.get(0).getCoordonne().getLatitude());
-
-                            map.moveCamera(CameraUpdateFactory.newLatLng(camera));
-
-
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Unexpected response code: " + response);
                     }
-                });
 
+                    String body = responseBody.string();
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                JSONObject json = new JSONObject(body);
+                                JSONArray array = new JSONArray(json.get("data").toString());
+
+                                ArrayList<SitesModel> sites = new ArrayList<>();
+
+                                for(int i=0; i < array.length() ; i++){
+                                    SitesModel site = siteService.jsonToSitesModel(array.getJSONObject(i));
+                                    sites.add(siteService.jsonToSitesModel(array.getJSONObject(i)));
+
+                                    LatLng sydney = new LatLng(site.getCoordonne().getLatitude(), site.getCoordonne().getLongitude());
+
+                                    googleMap.addMarker(new MarkerOptions().position(sydney).title(site.getNom()));
+                                }
+
+                                float desiredRotation = 18.0f; // Change this value to your desired rotation angle in degrees
+
+                                LatLng locationToFocusOn =new LatLng(-18.909920, 47.508597);
+
+                                CameraPosition cameraPosition = new CameraPosition.Builder()
+                                        .target(locationToFocusOn)
+                                        .zoom(6) // Use the current zoom level
+                                        .bearing(desiredRotation) // Set the desired rotation angle
+                                        .tilt(googleMap.getCameraPosition().tilt) // Use the current tilt angle
+                                        .build();
+
+                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                googleMap.setOnInfoWindowClickListener(MapFragment.this);
+
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }catch (Exception exception){
+                    exception.printStackTrace();
+                }
             }
+
         });
+
+
     }
 
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
+        Log.d("MARKER CLICKED", "onInfoWindowClick: ");
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
