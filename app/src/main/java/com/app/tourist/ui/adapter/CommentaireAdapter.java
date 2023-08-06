@@ -57,7 +57,7 @@ public class CommentaireAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.usernameTxt.setText("Tsiory Robsona");
+        holder.usernameTxt.setText(items.get(i).getUsername());
         holder.contenuTxt.setText(items.get(i).getCommentaire());
 
         /*int drawableResourceId = context.getResources().getIdentifier(

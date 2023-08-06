@@ -1,5 +1,6 @@
 package com.app.tourist.data.service;
 
+import com.app.tourist.data.models.Avis;
 import com.app.tourist.data.models.Coordonne;
 import com.app.tourist.data.models.SitesModel;
 
@@ -12,6 +13,7 @@ public class SiteService {
         SitesModel retour = null;
         try{
             retour = new SitesModel();
+            retour.setId(jsonObject.getString("_id"));
             retour.setNom(jsonObject.getString("nom"));
             retour.setDescription(jsonObject.getString("description"));
             retour.setRegion(jsonObject.getString("region"));
@@ -32,9 +34,23 @@ public class SiteService {
                 retour.setPhotos(null);
             }
 
-            retour.setAvis(null);
+            //Avis
+            JSONArray arrayAvis = new JSONArray(jsonObject.getString("avis"));
+            if(arrayAvis.length() != 0){
+                Avis[] avis = new Avis[arrayAvis.length()];
+                for(int i=0;i < arrayAvis.length(); i++){
+                    JSONObject jsonAvis = arrayAvis.getJSONObject(i);
+                    avis[i] = new Avis(jsonAvis.getString("note"), jsonAvis.getString("commentaire"), jsonAvis.getString("username"));;
+                }
+                retour.setAvis(avis);
+            }else{
+                retour.setAvis(null);
+            }
+
+            //retour.setAvis(null);
         }catch (Exception e){
-            return null;
+            e.printStackTrace();
+            //return null;
         }
         return retour;
     }

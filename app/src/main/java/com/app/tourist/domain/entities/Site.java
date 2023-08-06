@@ -7,12 +7,21 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 
 public class Site implements Serializable {
+    String id;
     String nom;
     String description;
     String region;
     Coordonne coordonne;
     String[] photos;
     Avis[] avis;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 

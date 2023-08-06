@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment {
         //this.view = views;
 
         ///API FETCH
-        client = new OkHttpClient.Builder().callTimeout(30, TimeUnit.SECONDS).build();
+        client = new OkHttpClient.Builder().callTimeout(60, TimeUnit.SECONDS).build();
 
         get(root);
 
