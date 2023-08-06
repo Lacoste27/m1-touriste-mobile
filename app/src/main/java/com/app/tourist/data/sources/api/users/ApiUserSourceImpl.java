@@ -113,5 +113,40 @@ public class ApiUserSourceImpl implements ApiUserSource{
         }
     }
 
+    public  Result<ApiResponse> signup(String nom, String prenom, String username, String password)   {
+        try {
+            OkHttpClient client = ApiService.getHttpInstance();
+            String url = NetworkPath.host + UserPath.signup;
+
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("nom", nom)
+                    .add("prenom", prenom)
+                    .add("email",username)
+                    .add("password", password)
+                    .build();
+
+            try {
+                Future<ResponseBody> response = apiPost.call(url,requestBody);
+
+                ResponseBody body = response.get(); // This call blocks until the result is available
+                ApiResponse<UserResponse> result = gson.fromJson(body.string(), ApiResponse.class);
+
+                return new Result.Success<>(result);
+
+            }  catch (UnknownHostException e){
+                return new Result.Error(e);
+            }catch (ExecutionException e) {
+                Throwable throwable = e.getCause();
+                return new Result.Error(new Exception(e.getCause()));
+            } catch (InterruptedException e) {
+                return new Result.Error(e);
+            } catch (BadRequestException e){
+                return new Result.Error(e);
+            }
+        }catch (IOException ioexception){
+            return new Result.Error(ioexception);
+        }
+    }
+
 
 }

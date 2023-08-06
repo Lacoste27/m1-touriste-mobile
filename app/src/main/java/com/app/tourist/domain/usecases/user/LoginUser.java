@@ -22,7 +22,7 @@ public class LoginUser {
                 Result<UserModel> result = new Result.Success<UserModel>(loginresponse);
                 return result;
             } else{
-                return null;
+                return new Result.Error(new Exception("Une erreur s'est produite"));
             }
         }catch (Exception exception) {
             return new Result.Error(exception);

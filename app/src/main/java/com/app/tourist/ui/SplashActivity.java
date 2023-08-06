@@ -20,9 +20,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().getDecorView().getWindowInsetsController().hide(
+        /*getWindow().getDecorView().getWindowInsetsController().hide(
                 android.view.WindowInsets.Type.statusBars()
-        );
+        );*/
 
         setContentView(R.layout.activity_splash);
         

@@ -50,6 +50,7 @@ public class LoginViewModel extends ViewModel {
             if (result instanceof Result.Success) {
                 UserModel user = (UserModel) ((Result.Success<UserModel>) result).getData();
                 LoggedInUserView data = new LoggedInUserView(user.getNom());
+                tokenRepository.setIsLogged();
                 loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
             } else {
                 Exception exception=  ((Result.Error) result).getError();

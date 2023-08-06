@@ -10,6 +10,7 @@ public class TokenRepositoryImpl implements TokenRepository {
 
     private static TokenRepositoryImpl instance;
 
+
     public static TokenRepositoryImpl getInstance(TokenDataSource tokenDataSource) {
         if(instance == null){
             instance = new TokenRepositoryImpl(tokenDataSource);
@@ -24,6 +25,17 @@ public class TokenRepositoryImpl implements TokenRepository {
     @Override
     public void saveToken(String token) {
         tokenDataSource.saveToken(token);
+    }
+
+
+    @Override
+    public void setIsLogged() {
+        this.tokenDataSource.setIsLogged();
+    }
+
+    @Override
+    public boolean getIsLogged() {
+        return this.tokenDataSource.getIsLogged();
     }
 
     @Override

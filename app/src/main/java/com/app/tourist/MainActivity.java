@@ -48,12 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE);
         this.repository = TokenRepositoryImpl.getInstance(new TokenDataSource(sharedPreferences));
-        this.repository.clearToken();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().getDecorView().getWindowInsetsController().hide(
-                android.view.WindowInsets.Type.statusBars()
-        );
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.container, new SignupFragment())
+                                .replace(R.id.container, new LoginFragment())
                                 .commit();
                         return true;
                     }
@@ -123,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isLoggedIn() {
-        return true;
+        return this.repository.getIsLogged();
     }
     private boolean isConnectedToInternet() {
         ConnectivityManager connectivityManager =
