@@ -4,6 +4,7 @@ import com.app.tourist.data.models.Coordonne;
 import com.app.tourist.data.models.Avis;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class Site implements Serializable {
     String nom;
@@ -12,6 +13,8 @@ public class Site implements Serializable {
     Coordonne coordonne;
     String[] photos;
     Avis[] avis;
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public String getNom() {
         return nom;
@@ -79,5 +82,38 @@ public class Site implements Serializable {
     }
 
     public Site() {
+    }
+
+    public int getNombreAvis(){
+        if(avis!=null){
+            return avis.length;
+        }
+        return 0;
+    }
+
+    public String noteMoyenne(){
+        float total = 0;
+        if(avis!=null){
+            for(Avis avi: avis){
+                if(avi.getNote() != null){
+                    total = total + (float)avi.getNote();
+                }
+            }
+            return df.format((float)(total/(float)avis.length));
+        }
+        return df.format((float)(total));
+
+    }
+
+    public String nombreCommentaire(){
+        int total = 0;
+        if(avis!=null){
+        for(Avis avi: avis) {
+            if(avi.getCommentaire()!=null){
+                total = total + 1;
+            }
+        }
+        }
+        return String.valueOf(total);
     }
 }

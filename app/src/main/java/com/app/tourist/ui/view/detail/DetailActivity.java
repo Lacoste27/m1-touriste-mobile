@@ -2,18 +2,29 @@ package com.app.tourist.ui.view.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.app.tourist.R;
+import com.app.tourist.data.models.Avis;
 import com.app.tourist.data.models.ItemsModel;
+import com.app.tourist.data.models.SitesModel;
+import com.app.tourist.ui.adapter.CommentaireAdapter;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 public class DetailActivity extends AppCompatActivity {
-    private TextView titleTxt, adressTxt, bedTxt, bathTxt, wifiTxt, descriptionTxt;
+    private TextView titleTxt, adressTxt, noteTxt, avisTxt, commentireNb, descriptionTxt;
     private ImageView pic;
-    private ItemsModel item;
+    private SitesModel item;
+
+    private BaseAdapter adapterCommentaireList;
+    private ListView listCommentaire;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,31 +35,50 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setVariable(){
-        item = (ItemsModel)getIntent().getSerializableExtra("object");
+        item = (SitesModel) getIntent().getSerializableExtra("object");
 
-        titleTxt.setText(item.getTitle());
-        adressTxt.setText(item.getAdresse());
-        bedTxt.setText(item.getBed() + " bed");
-        bathTxt.setText(item.getBath() + " bath");
+        titleTxt.setText(item.getNom());
+        adressTxt.setText(item.getRegion());
+        noteTxt.setText(item.noteMoyenne());
+        avisTxt.setText(item.getNombreAvis()+" avis");
+        avisTxt.setPaintFlags(avisTxt.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        commentireNb.setText(item.nombreCommentaire()+" commentaires");
+        commentireNb.setPaintFlags(commentireNb.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         descriptionTxt.setText(item.getDescription());
+        //wifiTxt.setText("Wifi");
 
-        if(item.isWifi()){
-            wifiTxt.setText("Wifi");
+
+        //int drawableResouceId = getResources().getIdentifier(item.getPic(), "drawable", getPackageName());
+
+        if(item.getPhotos() != null){
+            Glide.with(this)
+                    .load(item.getPhotos()[0])
+                    .into(pic);
         }else{
-            wifiTxt.setText("No wifi");
+            Glide.with(this)
+                    .load("https://lesglobeblogueurs.com/wp-content/uploads/2016/05/pont-ranomafana.jpg")
+                    .into(pic);
         }
 
-        int drawableResouceId = getResources().getIdentifier(item.getPic(), "drawable", getPackageName());
+        //Glide.with(this).load(drawableResouceId).into(pic);
+        ArrayList<Avis> avis = new ArrayList<Avis>();
+        if(item.getAvis()!=null){
+            for(Avis avi: item.getAvis()){
+                avis.add(avi);
+            }
+        }
 
-        Glide.with(this).load(drawableResouceId).into(pic);
+        listCommentaire = findViewById(R.id.listCommentaires);
+        adapterCommentaireList = new CommentaireAdapter(avis, this);
+        listCommentaire.setAdapter(adapterCommentaireList);
     }
 
     private void setView(){
         titleTxt = findViewById(R.id.titleTxt);
         adressTxt = findViewById(R.id.adressTxt);
-        bedTxt = findViewById(R.id.bedTxt);
-        bathTxt = findViewById(R.id.bathTxt);
-        wifiTxt = findViewById(R.id.wifiTxt);
+        noteTxt = findViewById(R.id.note);
+        avisTxt = findViewById(R.id.avis);
+        commentireNb = findViewById(R.id.nbcommentaire);
         descriptionTxt = findViewById(R.id.descriptionTxt);
         pic = findViewById(R.id.pic);
     }

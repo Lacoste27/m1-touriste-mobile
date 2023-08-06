@@ -21,8 +21,9 @@
 
                 <ImageView
                     android:id="@+id/pic"
+                    android:scaleType="fitXY"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="275dp"
                     android:src="@drawable/pic_detail"
                     app:srcCompat="@drawable/pic_detail" />
 
@@ -37,7 +38,7 @@
                     android:id="@+id/imageView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="25dp"
                     android:layout_marginBottom="10dp"
                     android:src="@drawable/marker_detail"
                     app:layout_constraintBottom_toBottomOf="@+id/pic"
@@ -67,146 +68,100 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/detail_top_background"
-                android:elevation="3dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.33333">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    >
 
                     <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:src="@drawable/bed"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/bedTxt"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/bed" />
+                        android:id="@+id/imageView"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:layout_weight="0.05"
+                        android:src="@drawable/favorite"
+                        />
 
                     <TextView
-                        android:id="@+id/bedTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
-                        android:text="bed"
-                        android:textColor="#575454"
+                        android:id="@+id/note"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.08"
+                        android:textColor="#000000"
                         android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:paddingTop="3dp"
+                        android:text="4.98," />
 
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="1dp"
+                    <TextView
+                        android:id="@+id/avis"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.09"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:paddingTop="3dp"
+                        android:text="12 avis." />
+
+                    <TextView
+                        android:id="@+id/nbcommentaire"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3333333"
+                        android:text="42 commentaires"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:paddingTop="3dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="#333232" />
+                    android:text="A propos"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.33333">
-
-                    <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:src="@drawable/bath"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/bathTxt"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/bath" />
-
-                    <TextView
-                        android:id="@+id/bathTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
-                        android:text="bath"
-                        android:textColor="#575454"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/view3"
-                    android:layout_width="1dp"
+                <TextView
+                    android:id="@+id/descriptionTxt"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="#333232" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Description"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.33333">
+                <TextView
+                    android:id="@+id/commentaires"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Commentaires"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
 
-                    <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:src="@drawable/bell"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/wifiTxt"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/bell" />
-
-                    <TextView
-                        android:id="@+id/wifiTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
-                        android:text="wifi"
-                        android:textColor="#575454"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                <ListView
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/listCommentaires"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/descriptionTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_marginTop="16dp"
-                android:textColor="#000000"
-                android:layout_marginStart="32dp"
-                />
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:text="This is 2 bed, 1 bath and wifi room Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tincidunt leo ut ipsum efficitur gravida. Integer ut dictum tellus, ut tempus ante. Praesent nec auctor lacus. Nulla facilisi. Nullam at sem rutrum, fringilla ex id, aliquam mauris. Morbi ac dolor elementum, iaculis nunc ac, euismod dui. Suspendisse tincidunt massa tellus, sed sollicitudin mauris porttitor sed. Praesent massa erat, dictum eget commodo quis, dapibus id quam."
-                android:textColor="#000000"
-                android:textSize="14sp" />
 
         </LinearLayout>
     </ScrollView>

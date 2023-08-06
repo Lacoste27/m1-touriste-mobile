@@ -1,6 +1,8 @@
-package com.app.tourist.data.models;
+package com.app.tourist.domain.entities;
 
-public class Avis {
+import java.io.Serializable;
+
+public class Avis implements Serializable {
     Integer note;
     String commentaire;
 
@@ -18,13 +20,5 @@ public class Avis {
 
     public void setCommentaire(String commentaire) {
         this.commentaire = commentaire;
-    }
-
-    public Avis(Integer note, String commentaire) {
-        this.note = note;
-        this.commentaire = commentaire;
-    }
-
-    public Avis() {
     }
 }
