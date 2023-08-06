@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
     private EditText commentChamp;
     private Button commentButton;
 
-    private String postCommentUrl = "https://m1-tourist-test.onrender.com/api/comment/";
+    private String postCommentUrl = "https://back-m1tourist.onrender.com/api/comment/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

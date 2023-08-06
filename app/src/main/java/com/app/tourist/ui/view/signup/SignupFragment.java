@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.app.tourist.R;
+import com.app.tourist.ui.view.home.HomeFragment;
 import com.app.tourist.ui.view.login.LoggedInUserView;
 import com.app.tourist.ui.view.login.LoginResult;
 import com.app.tourist.ui.view.login.LoginState;
@@ -47,7 +48,7 @@ public class SignupFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        this.viewModel = new ViewModelProvider(this, new SignupViewModelFactory())
+        this.viewModel = new ViewModelProvider(this, new SignupViewModelFactory(getContext()))
                 .get(SignupViewModel.class);
         return inflater.inflate(R.layout.fragment_signup, container, false);
     }
@@ -89,6 +90,11 @@ public class SignupFragment extends Fragment {
                 }
                 if (signupResult.getSuccess() != null) {
                     updateUiWithUser(signupResult.getSuccess());
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, new HomeFragment())
+                            .addToBackStack("back")
+                            .commit();
                 }
             }
         });

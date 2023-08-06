@@ -1,14 +1,17 @@
 package com.app.tourist.data.sources.local;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
 
 public class TokenDataSource {
     private final SharedPreferences sharedPreferences;
     private final String TOKEN_KEY = "token";
     private final String ISLOGGED_KEY ="is_logged_in";
 
-    public TokenDataSource(SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
+    public TokenDataSource(Context context) {
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public TokenDataSource() {
@@ -42,9 +45,10 @@ public class TokenDataSource {
     }
 
 
-    public void clearToken() {
+    public void clear() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(TOKEN_KEY);
+        editor.remove(ISLOGGED_KEY);
         editor.apply();
     }
 }

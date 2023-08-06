@@ -44,8 +44,8 @@ import okhttp3.Response;
 public class HomeFragment extends Fragment {
 
     OkHttpClient client;
-    String getUrl = "https://m1-tourist-test.onrender.com/api/sites";
-    String searchUrl = "https://m1-tourist-test.onrender.com/api/search?word=";
+    String getUrl = "https://back-m1tourist.onrender.com/api/sites";
+    String searchUrl = "https://back-m1tourist.onrender.com/api/search?word=";
     private EditText searchText;
     private FragmentHomeBinding binding;
     private RecyclerView.Adapter adapterPopular, adapterNew;

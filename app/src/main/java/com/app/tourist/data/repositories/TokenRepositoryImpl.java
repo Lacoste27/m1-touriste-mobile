@@ -44,7 +44,7 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public void clearToken() {
-        tokenDataSource.clearToken();
+    public void clear() {
+        tokenDataSource.clear();
     }
 }

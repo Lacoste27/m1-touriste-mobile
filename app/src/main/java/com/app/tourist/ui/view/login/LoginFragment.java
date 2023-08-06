@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
 import android.util.Log;
@@ -32,6 +33,8 @@ import android.widget.Toast;
 import com.app.tourist.R;
 import com.app.tourist.databinding.FragmentFavoriteBinding;
 import com.app.tourist.databinding.FragmentLoginBinding;
+import com.app.tourist.ui.view.home.HomeFragment;
+import com.app.tourist.ui.view.map.MapFragment;
 import com.app.tourist.ui.view.profile.ProfileViewModel;
 import com.app.tourist.ui.view.signup.SignupFragment;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,19 +51,22 @@ public class LoginFragment extends Fragment {
     private Button loginBoutton;
     private Button signupBoutton;
     private ProgressBar loadingProgressBar;
-    private NavController controller;
+    private static NavHostFragment navhost;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
 
+    public static NavHostFragment getNavhostInstace(){
+        return LoginFragment.navhost;
+    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
         this.view = inflater.inflate(R.layout.fragment_login, container, false);
-        this.viewModel = new ViewModelProvider(this, new LoginViewModelFactory())
+        this.viewModel = new ViewModelProvider(this, new LoginViewModelFactory(getContext()))
                 .get(LoginViewModel.class);
 
 
@@ -70,7 +76,12 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //this.controller = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment_activity_main); // to debug
+
+        NavHostFragment navHostFragment = (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+
+        if(LoginFragment.getNavhostInstace() == null){
+            LoginFragment.navhost = navHostFragment;
+        }
 
         this.emailLoginTxt = view.findViewById(R.id.emailTextLogin);
         this.passwordLoginTxt = view.findViewById(R.id.passwordTextLogin);
@@ -80,7 +91,11 @@ public class LoginFragment extends Fragment {
         this.signupBoutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Signup click",Toast.LENGTH_SHORT).show();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, new SignupFragment())
+                        .addToBackStack("back")
+                        .commit();
             }
         });
 
@@ -113,8 +128,12 @@ public class LoginFragment extends Fragment {
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, new HomeFragment())
+                            .addToBackStack("back")
+                            .commit();
                 }
-
             }
         });
 

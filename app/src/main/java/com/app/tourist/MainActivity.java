@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE);
-        this.repository = TokenRepositoryImpl.getInstance(new TokenDataSource(sharedPreferences));
+        this.repository = TokenRepositoryImpl.getInstance(new TokenDataSource(getApplicationContext()));
+        this.repository.clear();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                                 .commit();
                         return true;
                     }
-
                 } else if (id == R.id.navigation_map) {
                     getSupportFragmentManager()
                             .beginTransaction()

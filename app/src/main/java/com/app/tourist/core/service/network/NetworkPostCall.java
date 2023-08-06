@@ -26,13 +26,13 @@ public class NetworkPostCall {
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    public Future<ResponseBody> call(String url, RequestBody body) throws BadRequestException {
+    public Future<String> call(String url, RequestBody body) throws BadRequestException {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
-        Callable<ResponseBody> apiCallable = new Callable<ResponseBody>() {
+        Callable<String> apiCallable = new Callable<String>() {
             @Override
-            public ResponseBody call() throws Exception {
-                OkHttpClient client = new OkHttpClient();
+            public String call() throws Exception {
+                OkHttpClient client = ApiService.getHttpInstance();
                 Request request = new Request.Builder()
                         .url(url)
                         .post(body)
@@ -40,10 +40,10 @@ public class NetworkPostCall {
 
                 try (Response response = client.newCall(request).execute()) {
                     if(response.isSuccessful()){
-                        return response.body();
+                        return response.body().string();
                     } else {
                         if(response.networkResponse().code() == 400){
-                            throw new BadRequestException("Bad request");
+                            throw new BadRequestException("Vérifier votre données");
                         } else {
                             throw  new IOException("Api called failed"+String.valueOf(response.networkResponse().code()));
                         }

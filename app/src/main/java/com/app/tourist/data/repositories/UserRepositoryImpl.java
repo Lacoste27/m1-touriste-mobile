@@ -1,8 +1,5 @@
 package com.app.tourist.data.repositories;
 
-import com.app.tourist.core.error.BadRequestException;
-import com.app.tourist.core.service.network.NetworkGetCall;
-import com.app.tourist.core.service.network.NetworkPostCall;
 import com.app.tourist.core.utils.ApiResponse;
 import com.app.tourist.core.utils.Result;
 
@@ -11,11 +8,10 @@ import com.app.tourist.data.sources.api.users.ApiUserSourceImpl;
 
 import com.app.tourist.domain.entities.User;
 import com.app.tourist.domain.repositories.UserRepositories;
+import com.google.gson.internal.LinkedTreeMap;
 
-import java.io.IOException;
 import java.util.List;
-
-import javax.inject.Inject;
+import java.util.SortedMap;
 
 
 public class UserRepositoryImpl implements UserRepositories {
@@ -58,12 +54,37 @@ public class UserRepositoryImpl implements UserRepositories {
             if(response instanceof Result.Success){
                 ApiResponse data = ((Result.Success<ApiResponse>) response).getData();
 
-                UserResponse utilisateur = (UserResponse) data.getData();
+                LinkedTreeMap utilisateur = (LinkedTreeMap) data.getData();
 
                 User result = new User();
-                result.setEmail(utilisateur.getEmail());
-                result.setNom(utilisateur.getNom());
-                result.setEmail(utilisateur.getEmail());
+                result.setNom(utilisateur.get("nom").toString());
+                result.setPrenom(utilisateur.get("prenom").toString());
+                result.setEmail(utilisateur.get("email").toString());
+
+                return result;
+
+            } else {
+                throw ((Result.Error) response).getError();
+            }
+        }catch (Exception Exception){
+            throw Exception;
+        }
+    }
+
+    @Override
+    public User signup(String nom, String prenom, String email, String password) throws Exception {
+        try{
+            Result<ApiResponse> response = this.apiUserSource.signup(nom, prenom, email, password);
+
+            if(response instanceof Result.Success){
+                ApiResponse data = ((Result.Success<ApiResponse>) response).getData();
+
+                LinkedTreeMap utilisateur = (LinkedTreeMap) data.getData();
+
+                User result = new User();
+                result.setNom(utilisateur.get("nom").toString());
+                result.setPrenom(utilisateur.get("prenom").toString());
+                result.setEmail(utilisateur.get("email").toString());
 
                 return result;
 

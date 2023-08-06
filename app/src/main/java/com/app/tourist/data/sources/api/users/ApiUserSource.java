@@ -6,5 +6,6 @@ import com.app.tourist.data.models.UserModel;
 
 public interface ApiUserSource {
     Result<ApiResponse> getAllUser();
-    Result<ApiResponse> login(String username, String password);
+    Result<ApiResponse> login(String username, String password) throws Exception;
+
 }

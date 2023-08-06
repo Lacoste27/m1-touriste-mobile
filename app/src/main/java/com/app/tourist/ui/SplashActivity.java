@@ -13,7 +13,7 @@ import com.app.tourist.MainActivity;
 import com.app.tourist.R;
 
 public class SplashActivity extends AppCompatActivity {
-    private static final long SPLASH_SCREEN_DELAY = 2000; // 2 secondes
+    private static final long SPLASH_SCREEN_DELAY = 1000; // 2 secondes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         Thread background = new Thread() {
             public void run() {
                 try {
-                    sleep(5*1000);
+                    sleep(1*1000);
 
                     Intent intent =new Intent(getBaseContext(), MainActivity.class);
                     startActivity(intent);

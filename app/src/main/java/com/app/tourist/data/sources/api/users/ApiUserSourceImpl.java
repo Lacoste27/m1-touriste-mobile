@@ -16,6 +16,8 @@ import com.app.tourist.data.service.ApiService;
 import com.app.tourist.data.service.UserService;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +26,7 @@ import java.util.concurrent.Future;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -72,44 +75,37 @@ public class ApiUserSourceImpl implements ApiUserSource{
     }
 
     @Override
-    public  Result<ApiResponse> login(String username, String password)   {
+    public  Result<ApiResponse> login(String username, String password) throws Exception   {
         try {
             OkHttpClient client = ApiService.getHttpInstance();
             String url = NetworkPath.host + UserPath.login;
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("email",username)
-                    .add("password", password)
-                    .build();
+
+            JSONObject postAPI = new JSONObject();
+            postAPI.put("email", username);
+            postAPI.put("password", password);
+
+            MediaType mediaType = MediaType.parse("application/json");
+            RequestBody requestBody = RequestBody.create(mediaType, postAPI.toString());
+
 
             try {
-                Future<ResponseBody> response = apiPost.call(url,requestBody);
+                Future<String> response = apiPost.call(url,requestBody);
 
-                ResponseBody body = response.get(); // This call blocks until the result is available
-                ApiResponse<UserResponse> result = gson.fromJson(body.string(), ApiResponse.class);
+                String body = response.get(); // This call blocks until the result is available
+                ApiResponse<UserResponse> result = gson.fromJson(body, ApiResponse.class);
 
                 return new Result.Success<>(result);
 
-            }  catch (UnknownHostException e){
-                return new Result.Error(e);
-            }catch (ExecutionException e) {
+            } catch (ExecutionException e) {
                 Throwable throwable = e.getCause();
                 return new Result.Error(new Exception(e.getCause()));
             } catch (InterruptedException e) {
                 return new Result.Error(e);
-            } catch (BadRequestException e){
+            }catch (BadRequestException e){
                 return new Result.Error(e);
             }
-        }catch (IOException ioexception){
+        }catch (Exception ioexception){
             return new Result.Error(ioexception);
-        }
-    }
-
-    public Result<ApiResponse> getLogin(ResponseBody body){
-        try{
-            ApiResponse<UserResponse> response = gson.fromJson(body.string(), ApiResponse.class);
-            return new Result.Success<>(response);
-        }catch (IOException exception){
-            return new Result.Error(exception);
         }
     }
 
@@ -118,23 +114,23 @@ public class ApiUserSourceImpl implements ApiUserSource{
             OkHttpClient client = ApiService.getHttpInstance();
             String url = NetworkPath.host + UserPath.signup;
 
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("nom", nom)
-                    .add("prenom", prenom)
-                    .add("email",username)
-                    .add("password", password)
-                    .build();
+            JSONObject postAPI = new JSONObject();
+            postAPI.put("nom", nom);
+            postAPI.put("prenom", prenom);
+            postAPI.put("email", username);
+            postAPI.put("password", password);
+
+            MediaType mediaType = MediaType.parse("application/json");
+            RequestBody requestBody = RequestBody.create(mediaType, postAPI.toString());
 
             try {
-                Future<ResponseBody> response = apiPost.call(url,requestBody);
+                Future<String> response = apiPost.call(url,requestBody);
 
-                ResponseBody body = response.get(); // This call blocks until the result is available
-                ApiResponse<UserResponse> result = gson.fromJson(body.string(), ApiResponse.class);
+                String body = response.get(); // This call blocks until the result is available
+                ApiResponse<UserResponse> result = gson.fromJson(body, ApiResponse.class);
 
                 return new Result.Success<>(result);
 
-            }  catch (UnknownHostException e){
-                return new Result.Error(e);
             }catch (ExecutionException e) {
                 Throwable throwable = e.getCause();
                 return new Result.Error(new Exception(e.getCause()));
@@ -143,7 +139,7 @@ public class ApiUserSourceImpl implements ApiUserSource{
             } catch (BadRequestException e){
                 return new Result.Error(e);
             }
-        }catch (IOException ioexception){
+        }catch (Exception ioexception){
             return new Result.Error(ioexception);
         }
     }

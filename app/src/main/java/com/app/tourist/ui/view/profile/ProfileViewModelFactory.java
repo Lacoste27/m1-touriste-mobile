@@ -1,4 +1,4 @@
-package com.app.tourist.ui.view.signup;
+package com.app.tourist.ui.view.profile;
 
 import android.content.Context;
 
@@ -10,19 +10,17 @@ import com.app.tourist.data.repositories.UserRepositoryImpl;
 import com.app.tourist.data.sources.api.users.ApiUserSourceImpl;
 import com.app.tourist.ui.view.login.LoginViewModel;
 
-public class SignupViewModelFactory implements ViewModelProvider.Factory{
+public class ProfileViewModelFactory implements ViewModelProvider.Factory {
+    public Context context;
 
-    private Context context;
-
-    public SignupViewModelFactory(Context context){
+    public ProfileViewModelFactory(Context context){
         this.context = context;
     }
-
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(SignupViewModel.class)) {
-            return (T) new SignupViewModel(UserRepositoryImpl.getInstance(new ApiUserSourceImpl()), this.context);
+        if (modelClass.isAssignableFrom(ProfileViewModel.class)) {
+            return (T) new ProfileViewModel(this.context);
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

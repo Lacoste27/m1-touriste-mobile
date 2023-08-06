@@ -1,5 +1,6 @@
 package com.app.tourist.ui.view.login;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Patterns;
 
@@ -24,6 +25,7 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private TokenRepositoryImpl tokenRepository;
     private LoginUser loginUseCase;
+    private Context context;
 
     public LoginViewModel(){
         ApiUserSourceImpl datasource = new ApiUserSourceImpl();
@@ -32,8 +34,9 @@ public class LoginViewModel extends ViewModel {
         this.loginUseCase = new LoginUser(repositories);
     }
 
-    public LoginViewModel(UserRepositoryImpl repository){
+    public LoginViewModel(UserRepositoryImpl repository, Context context){
         this.loginUseCase = new LoginUser(repository);
+        this.context = context;
     }
 
     LiveData<LoginState> getLoginFormState() {
@@ -50,7 +53,7 @@ public class LoginViewModel extends ViewModel {
             if (result instanceof Result.Success) {
                 UserModel user = (UserModel) ((Result.Success<UserModel>) result).getData();
                 LoggedInUserView data = new LoggedInUserView(user.getNom());
-                tokenRepository.setIsLogged();
+                setIsLogged();
                 loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
             } else {
                 Exception exception=  ((Result.Error) result).getError();
@@ -61,7 +64,6 @@ public class LoginViewModel extends ViewModel {
                     String message = exception.getLocalizedMessage().split(":")[1];
                     loginResult.setValue(new LoginResult(message));
                 }
-
             }
         }catch (Exception exception){
             String message = exception.getLocalizedMessage().split(":")[1];
@@ -69,23 +71,30 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void setToken(SharedPreferences preferences, String token){
-        TokenDataSource tokenDataSource = new TokenDataSource(preferences);
+    public void setToken(String token){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
         this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
         this.tokenRepository.saveToken(token);
     }
 
-    public String getToken(SharedPreferences preferences){
-        TokenDataSource tokenDataSource = new TokenDataSource(preferences);
+    public String getToken(){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
         this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
         return this.tokenRepository.getToken();
     }
 
-    public void clearToken(SharedPreferences preferences){
-        TokenDataSource tokenDataSource = new TokenDataSource(preferences);
+    public void setIsLogged(){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
         this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
-        this.tokenRepository.clearToken();
+        this.tokenRepository.setIsLogged();
     }
+
+    public void clearToken(){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
+        this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
+        this.tokenRepository.clear();
+    }
+
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
             loginFormState.setValue(new LoginState(R.string.invalid_username, null));

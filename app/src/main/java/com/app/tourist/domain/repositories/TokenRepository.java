@@ -5,5 +5,5 @@ public interface TokenRepository {
     void setIsLogged();
     String getToken();
     boolean getIsLogged();
-    void clearToken();
+    void clear();
 }

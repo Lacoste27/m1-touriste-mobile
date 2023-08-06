@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +23,10 @@ import com.app.tourist.R;
 import com.app.tourist.core.constant.NetworkPath;
 import com.app.tourist.core.constant.UserPath;
 import com.app.tourist.databinding.FragmentProfileBinding;
+import com.app.tourist.ui.view.home.HomeFragment;
 import com.app.tourist.ui.view.login.LoginFragment;
+import com.app.tourist.ui.view.signup.SignupFragment;
+import com.app.tourist.ui.view.signup.SignupViewModelFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -46,6 +50,7 @@ public class ProfileFragement extends Fragment  {
     private ProfileViewModel mViewModel;
     private FragmentProfileBinding binding;
     private NavController controller;
+    private Button logoutBoutton;
 
     public static ProfileFragement newInstance() {
         return new ProfileFragement();
@@ -54,13 +59,30 @@ public class ProfileFragement extends Fragment  {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ProfileViewModel profileViewModel =
-                new ViewModelProvider(this).get(ProfileViewModel.class);
+        this.mViewModel =  new ViewModelProvider(this, new ProfileViewModelFactory(getContext())).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         return root;
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        this.logoutBoutton = view.findViewById(R.id.logoutBoutton);
+
+        this.logoutBoutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewModel.logout();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, new HomeFragment())
+                        .addToBackStack("back")
+                        .commit();
+            }
+        });
     }
 
 
@@ -70,7 +92,4 @@ public class ProfileFragement extends Fragment  {
         binding = null;
     }
 
-    private boolean isLoggedIn() {
-        return false;
-    }
 }
