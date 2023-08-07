@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public class DetailActivity extends AppCompatActivity {
     private EditText commentChamp;
     private Button commentButton;
 
+    private RatingBar rating;
+
     private String postCommentUrl = "https://back-m1tourist.onrender.com/api/comment/";
 
     @Override
@@ -64,6 +67,9 @@ public class DetailActivity extends AppCompatActivity {
 
         commentChamp = findViewById(R.id.contenucommentaire);
         commentButton = findViewById(R.id.button);
+        rating = findViewById(R.id.ratingId);
+
+        rating.setNumStars(5);
 
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,11 +95,12 @@ public class DetailActivity extends AppCompatActivity {
             TokenDataSource tokenDataSource = new TokenDataSource(getApplicationContext());
             TokenRepositoryImpl tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
             String username = tokenRepository.getUserLogged();
+            int ratingnumber = (int)this.rating.getRating();
 
             JSONObject postAPI = new JSONObject();
             postAPI.put("idsite", item.getId());
             postAPI.put("username", username);
-            postAPI.put("note", "4");
+            postAPI.put("note", ratingnumber);
             postAPI.put("commentaire", commentaire);
 
             MediaType mediaType = MediaType.parse("application/json");

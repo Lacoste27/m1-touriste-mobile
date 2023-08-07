@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         this.repository = TokenRepositoryImpl.getInstance(new TokenDataSource(getApplicationContext()));
-        this.repository.clear();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
