@@ -74,22 +74,26 @@
 
         <Button
             android:id="@+id/loginBoutton"
-            android:layout_width="136dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="36dp"
-            android:layout_marginEnd="44dp"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:drawableEnd="@drawable/signin"
             android:text="Connexion"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/passwordTextLogin" />
 
         <Button
             android:id="@+id/signupBoutton"
-            android:layout_width="138dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="36dp"
+            android:layout_width="167dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:drawableEnd="@drawable/signup"
             android:text="S'inscrire"
+            android:textSize="10sp"
             app:layout_constraintEnd_toStartOf="@+id/loginBoutton"
-            app:layout_constraintHorizontal_bias="0.541"
+            app:layout_constraintHorizontal_bias="0.744"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/passwordTextLogin" />
 

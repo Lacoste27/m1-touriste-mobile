@@ -83,6 +83,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Request request = new Request.Builder().url(getUrl).build();
 
+        LatLng locationToFocusOn =new LatLng(-18.909920, 47.508597);
+        float desiredRotation = 16.0f; // Change this value to your desired rotation angle in degrees
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(locationToFocusOn)
+                .zoom(5.8f) // Use the current zoom level
+                .bearing(desiredRotation) // Set the desired rotation angle
+                .tilt(googleMap.getCameraPosition().tilt) // Use the current tilt angle
+                .build();
+
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.setOnInfoWindowClickListener(MapFragment.this);
+
         //googleMap.setInfoWindowAdapter(new InfoWindowAdapter(getLayoutInflater()));
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -118,19 +131,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                                     googleMap.addMarker(new MarkerOptions().position(sydney).title(site.getNom()));
                                 }
 
-                                float desiredRotation = 18.0f; // Change this value to your desired rotation angle in degrees
 
-                                LatLng locationToFocusOn =new LatLng(-18.909920, 47.508597);
 
-                                CameraPosition cameraPosition = new CameraPosition.Builder()
-                                        .target(locationToFocusOn)
-                                        .zoom(6) // Use the current zoom level
-                                        .bearing(desiredRotation) // Set the desired rotation angle
-                                        .tilt(googleMap.getCameraPosition().tilt) // Use the current tilt angle
-                                        .build();
-
-                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                                googleMap.setOnInfoWindowClickListener(MapFragment.this);
 
                             }catch (Exception e){
                                 e.printStackTrace();

@@ -27,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -38,6 +39,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
     private static final long SPLASH_SCREEN_DELAY = 3000; // 2 secondes
+    private static final String CHANNEL_ID = "channel";
 
     private ActivityMainBinding binding;
     private TokenRepositoryImpl repository;
@@ -109,12 +111,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Titre")
+                .setContentText("Content")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setAutoCancel(true);
+
+        builder.build();
+
         if (isConnectedToInternet()) {
             Toast.makeText(this, R.string.connecter, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, R.string.nonConnecter, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private boolean isLoggedIn() {

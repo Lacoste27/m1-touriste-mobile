@@ -121,6 +121,7 @@
             android:layout_width="220dp"
             android:layout_height="49dp"
             android:layout_marginTop="16dp"
+            android:drawableRight="@drawable/logout_2_"
             android:text="Se deconnecter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
