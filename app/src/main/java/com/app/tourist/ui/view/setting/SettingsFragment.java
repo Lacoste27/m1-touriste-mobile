@@ -8,6 +8,7 @@ import com.app.tourist.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -23,34 +24,26 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         ListPreference themePreference = findPreference("claire");
 
         // Register preference change listener for themePreference
-        // themePreference.setOnPreferenceChangeListener(this);
+        themePreference.setOnPreferenceChangeListener(this);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("theme_preference")) {
+        if (key.equals("clair")) {
             ListPreference themePreference = findPreference(key);
             themePreference.setSummary(themePreference.getEntry());
 
             // Get the selected theme value
-            String selectedThemeValue = sharedPreferences.getString(key, "default_theme");
+            String selectedThemeValue = sharedPreferences.getString(key, "claire");
 
-            // Set the theme based on the selected value
-            switch (selectedThemeValue) {
-                case "theme1":
-                    getActivity().setTheme(23);
+            switch (selectedThemeValue){
+                case "claire":
+                    // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     break;
-                case "theme2":
-                    getActivity().setTheme(23);
-                    break;
-                // Add more cases for other themes
-                default:
-                    getActivity().setTheme(23);; // Default theme
+                case "sombre":
+                    // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     break;
             }
-
-            // Recreate the activity to apply the new theme
-            getActivity().recreate();
         }
     }
 
@@ -61,25 +54,28 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
             switch (value){
                 case "claire":
-                    applyTheme(R.style.Theme_Tourist_Light);
+                    // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     break;
                 case "sombre":
-                    applyTheme(R.style.Theme_Tourist_Dark);
+                    // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     break;
             }
+
+            // getActivity().recreate();
+
             return true;
         }
-      return false;
+
+        return false;
     }
 
     private void applyTheme(int themeResId) {
         if (getActivity() instanceof AppCompatActivity) {
             // Apply the theme to the activity's views programmatically
-            ((AppCompatActivity) getActivity()).setTheme(themeResId);
+            getActivity().setTheme(themeResId);
 
             // Recreate the activity to apply the new theme
-            ((AppCompatActivity) getActivity()).recreate();
-            ((AppCompatActivity) getActivity()).recreate();
+            getActivity().recreate();
         }
     }
 }

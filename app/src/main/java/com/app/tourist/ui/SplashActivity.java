@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         Thread background = new Thread() {
             public void run() {
                 try {
-                    sleep(1*1000);
+                    sleep(5*1000);
 
                     Intent intent =new Intent(getBaseContext(), MainActivity.class);
                     startActivity(intent);
