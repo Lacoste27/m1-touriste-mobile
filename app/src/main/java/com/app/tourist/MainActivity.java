@@ -1,38 +1,26 @@
 package com.app.tourist;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.app.tourist.R;
 import com.app.tourist.data.repositories.TokenRepositoryImpl;
 import com.app.tourist.data.sources.local.TokenDataSource;
-import com.app.tourist.domain.repositories.TokenRepository;
+import com.app.tourist.ui.view.accueil.Accueil;
 import com.app.tourist.ui.view.favorite.FavoriteFragment;
-import com.app.tourist.ui.view.home.HomeFragment;
 import com.app.tourist.ui.view.login.LoginFragment;
 import com.app.tourist.ui.view.map.MapFragment;
 import com.app.tourist.ui.view.profile.ProfileFragement;
 import com.app.tourist.ui.view.setting.SettingsFragment;
-import com.app.tourist.ui.view.signup.SignupFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.app.tourist.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationBarView;
@@ -62,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
 
-                if(id == R.id.navigation_home){
+                if(id == R.id.navigation_accueil){
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.container, new HomeFragment())
+                            .replace(R.id.container, new Accueil())
                             .commit();
                     return true;
 
