@@ -53,7 +53,7 @@ public class LoginViewModel extends ViewModel {
             if (result instanceof Result.Success) {
                 UserModel user = (UserModel) ((Result.Success<UserModel>) result).getData();
                 LoggedInUserView data = new LoggedInUserView(user.getNom());
-                setIsLogged();
+                setIsLogged(user.getEmail(), user.getNom(), user.getPrenom());
                 loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
             } else {
                 Exception exception=  ((Result.Error) result).getError();
@@ -87,6 +87,12 @@ public class LoginViewModel extends ViewModel {
         TokenDataSource tokenDataSource = new TokenDataSource(this.context);
         this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
         this.tokenRepository.setIsLogged();
+    }
+
+    public void setIsLogged(String email, String nom, String prenom){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
+        this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
+        this.tokenRepository.setIsLogged(email, nom, prenom);
     }
 
     public void clearToken(){

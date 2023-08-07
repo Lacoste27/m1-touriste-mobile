@@ -1,7 +1,5 @@
 package com.app.tourist.ui.view.profile;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 
@@ -9,41 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.tourist.R;
-import com.app.tourist.core.constant.NetworkPath;
-import com.app.tourist.core.constant.UserPath;
 import com.app.tourist.databinding.FragmentProfileBinding;
 import com.app.tourist.ui.view.home.HomeFragment;
-import com.app.tourist.ui.view.login.LoginFragment;
-import com.app.tourist.ui.view.signup.SignupFragment;
-import com.app.tourist.ui.view.signup.SignupViewModelFactory;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class ProfileFragement extends Fragment  {
     private static final String CHANNEL_ID ="sqldlqs" ;
@@ -51,6 +25,10 @@ public class ProfileFragement extends Fragment  {
     private FragmentProfileBinding binding;
     private NavController controller;
     private Button logoutBoutton;
+
+    private TextView welcomeTxt;
+
+    private EditText nomTxt, prenomTxt, emailTxt;
 
     public static ProfileFragement newInstance() {
         return new ProfileFragement();
@@ -71,6 +49,20 @@ public class ProfileFragement extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
 
         this.logoutBoutton = view.findViewById(R.id.logoutBoutton);
+        this.welcomeTxt = view.findViewById(R.id.welcomeTxt);
+        this.nomTxt = view.findViewById(R.id.editTxtnom);
+        this.prenomTxt = view.findViewById(R.id.editTxtPrenom);
+        this.emailTxt = view.findViewById(R.id.editTxtEmail);
+
+        this.welcomeTxt.setText(this.welcomeTxt.getText() + this.mViewModel.getUserLogged());
+
+        String nomcomplet = this.mViewModel.getUserLogged();
+        String nom = this.mViewModel.getUserLogged().split(" ")[0];
+        String prenom = this.mViewModel.getUserLogged().substring(nom.length(), nomcomplet.length());
+
+        this.nomTxt.setText(nom);
+        this.prenomTxt.setText(prenom);
+        this.emailTxt.setText(this.mViewModel.getUsername());
 
         this.logoutBoutton.setOnClickListener(new View.OnClickListener() {
             @Override

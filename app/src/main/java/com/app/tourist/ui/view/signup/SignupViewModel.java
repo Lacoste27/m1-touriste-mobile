@@ -56,7 +56,7 @@ public class SignupViewModel extends ViewModel {
             if (result instanceof Result.Success) {
                 UserModel user = (UserModel) ((Result.Success<UserModel>) result).getData();
                 LoggedInUserView data = new LoggedInUserView(user.getNom());
-                setIsLogged();
+                setIsLogged(user.getEmail(), user.getNom(), user.getPrenom());
                 signupResult.setValue(new SignupResult(new LoggedInUserView(data.getDisplayName())));
             } else {
                 String message = ((Result.Error) result).getError().getLocalizedMessage().split(":")[1];
@@ -78,6 +78,12 @@ public class SignupViewModel extends ViewModel {
         TokenDataSource tokenDataSource = new TokenDataSource(this.context);
         this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
         this.tokenRepository.setIsLogged();
+    }
+
+    public void setIsLogged(String email, String nom, String prenom){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
+        this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
+        this.tokenRepository.setIsLogged(email, nom, prenom);
     }
 
     public String getToken(){

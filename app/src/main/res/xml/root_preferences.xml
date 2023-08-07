@@ -20,9 +20,9 @@
             android:layout_height="wrap_content"
             android:defaultValue="claire"
             android:key="claire"
+            android:title="Theme de l'application"
             app:entries="@array/themes_entries"
             app:entryValues="@array/themes_values"
-            android:title="Theme de l'application"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

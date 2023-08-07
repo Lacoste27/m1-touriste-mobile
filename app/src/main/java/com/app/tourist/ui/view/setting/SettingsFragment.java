@@ -1,14 +1,85 @@
 package com.app.tourist.ui.view.setting;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 
 import com.app.tourist.R;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
+
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+        // Set the current theme preference summary
+        ListPreference themePreference = findPreference("claire");
+
+        // Register preference change listener for themePreference
+        // themePreference.setOnPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("theme_preference")) {
+            ListPreference themePreference = findPreference(key);
+            themePreference.setSummary(themePreference.getEntry());
+
+            // Get the selected theme value
+            String selectedThemeValue = sharedPreferences.getString(key, "default_theme");
+
+            // Set the theme based on the selected value
+            switch (selectedThemeValue) {
+                case "theme1":
+                    getActivity().setTheme(23);
+                    break;
+                case "theme2":
+                    getActivity().setTheme(23);
+                    break;
+                // Add more cases for other themes
+                default:
+                    getActivity().setTheme(23);; // Default theme
+                    break;
+            }
+
+            // Recreate the activity to apply the new theme
+            getActivity().recreate();
+        }
+    }
+
+    @Override
+    public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+        if (preference.getKey().equals("claire")) {
+            String value = newValue.toString();
+
+            switch (value){
+                case "claire":
+                    applyTheme(R.style.Theme_Tourist_Light);
+                    break;
+                case "sombre":
+                    applyTheme(R.style.Theme_Tourist_Dark);
+                    break;
+            }
+            return true;
+        }
+      return false;
+    }
+
+    private void applyTheme(int themeResId) {
+        if (getActivity() instanceof AppCompatActivity) {
+            // Apply the theme to the activity's views programmatically
+            ((AppCompatActivity) getActivity()).setTheme(themeResId);
+
+            // Recreate the activity to apply the new theme
+            ((AppCompatActivity) getActivity()).recreate();
+            ((AppCompatActivity) getActivity()).recreate();
+        }
     }
 }

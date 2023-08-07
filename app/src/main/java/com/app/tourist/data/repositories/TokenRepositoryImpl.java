@@ -34,6 +34,23 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
+    public void setIsLogged(String email, String nom, String prenom) {
+        this.tokenDataSource.setIsLogged(email, nom, prenom);
+    }
+
+    @Override
+    public String getUserLogged() {
+        String user = this.tokenDataSource.getUserLogged();
+        return user;
+    }
+
+    @Override
+    public String getUserName() {
+        String email = this.tokenDataSource.getUserEmail();
+        return email;
+    }
+
+    @Override
     public boolean getIsLogged() {
         return this.tokenDataSource.getIsLogged();
     }

@@ -29,4 +29,18 @@ public class ProfileViewModel extends ViewModel {
         this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
         this.tokenRepository.clear();
     }
+
+    public String getUserLogged(){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
+        this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
+        String user =  this.tokenRepository.getUserLogged();
+        return user;
+    }
+
+    public String getUsername(){
+        TokenDataSource tokenDataSource = new TokenDataSource(this.context);
+        this.tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
+        String user =  this.tokenRepository.getUserName();
+        return user;
+    }
 }

@@ -14,12 +14,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.tourist.MainActivity;
 import com.app.tourist.R;
 import com.app.tourist.data.models.Avis;
 import com.app.tourist.data.models.ItemsModel;
 import com.app.tourist.data.models.SitesModel;
+import com.app.tourist.data.repositories.TokenRepositoryImpl;
+import com.app.tourist.data.sources.local.TokenDataSource;
 import com.app.tourist.ui.adapter.CommentaireAdapter;
 import com.bumptech.glide.Glide;
 
@@ -65,10 +68,15 @@ public class DetailActivity extends AppCompatActivity {
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                TokenDataSource tokenDataSource = new TokenDataSource(getApplicationContext());
+                TokenRepositoryImpl tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
                 String inputValue = commentChamp.getText().toString();
-                Log.d("CLICK", item.getId());
-                //Post the comment
-                postComment(inputValue);
+
+                if(!tokenRepository.getIsLogged()) {
+                    Toast.makeText(DetailActivity.this, "Veuillez vous connectez pour pouvoir commentez", Toast.LENGTH_SHORT).show();
+                } else {
+                    postComment(inputValue);
+                }
             }
         });
 
@@ -78,9 +86,13 @@ public class DetailActivity extends AppCompatActivity {
 
     private void postComment(String commentaire){
         try{
+            TokenDataSource tokenDataSource = new TokenDataSource(getApplicationContext());
+            TokenRepositoryImpl tokenRepository = TokenRepositoryImpl.getInstance(tokenDataSource);
+            String username = tokenRepository.getUserLogged();
+
             JSONObject postAPI = new JSONObject();
             postAPI.put("idsite", item.getId());
-            postAPI.put("username", "Anonymous");
+            postAPI.put("username", username);
             postAPI.put("note", "4");
             postAPI.put("commentaire", commentaire);
 
